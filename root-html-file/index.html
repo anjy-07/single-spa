@@ -47,15 +47,19 @@
       Promise.all([System.import('single-spa'), System.import('single-spa-layout')]).then(([singleSpa, singleSpaLayout]) => {
         const { constructApplications, constructLayoutEngine, constructRoutes } = singleSpaLayout;
         const { registerApplication, start } = singleSpa;
-
+        const obj = "sha"
         const routes = constructRoutes(document.querySelector('#single-spa-layout'));
         const applications = constructApplications({
           routes,
           loadApp({ name }) {
-            return System.import(name);
+            console.log(name);
+            return System.import(name) ;
           },
+          customProps: { authToken: "d83jD63UdZ6RS6f70D0" }
         });
-        const layoutEngine = constructLayoutEngine({ routes, applications });
+       
+        applications.forEach(app => app.customProps = { authToken: "d83jD63UdZ6RS6f70D0" } );
+        // const layoutEngine = constructLayoutEngine({ routes, applications });
         applications.forEach(registerApplication);
 
         start();
