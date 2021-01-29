@@ -10,9 +10,9 @@
     <script type="systemjs-importmap">
       {
         "imports": {
-          
-          "app2": "http://localhost:4207/main.js",
-        
+          "app1": "http://localhost:4201/main.js",
+          "app2": "http://localhost:4202/main.js",
+          "navbar": "http://localhost:4300/main.js",
           "single-spa": "https://cdnjs.cloudflare.com/ajax/libs/single-spa/5.5.0/system/single-spa.min.js"
         }
       }
@@ -30,15 +30,32 @@
     <p>To reproduce the bug, go to app1 and click the link to lazy-load a module. Then go to app2 and click the link there to try to lazy-load a module from app2.</p>
     <script>
       System.import('single-spa').then(function (singleSpa) {
-       
-       
+        singleSpa.registerApplication(
+          'navbar',
+          function () {
+            return System.import('navbar');
+          },
+          function (location) {
+            return true;
+          }
+        )
+
+        singleSpa.registerApplication(
+          'app1',
+          function () {
+            return System.import('app1');
+          },
+          function (location) {
+            return location.pathname.startsWith('/app1');
+          }
+        );
+
         singleSpa.registerApplication(
           'app2',
           function () {
             return System.import('app2');
           },
           function (location) {
-            console.log(location.pathname.startsWith('/app2'))
             return location.pathname.startsWith('/app2');
           }
         )
